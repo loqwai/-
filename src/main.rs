@@ -1,4 +1,4 @@
-use std::io::{self, Read, BufRead};
+use std::io::{self, BufRead};
 mod game;
 
 fn main() -> Result<(), io::Error> {

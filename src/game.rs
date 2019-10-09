@@ -14,14 +14,19 @@ pub fn eval(actions: &Vec<String>) -> String {
         },
          "🛌🛋" => hashmap!{
             "🚪" =>  "🌲🌲🏚🌲🌲",
+            "👏" =>  "🛏⛄",
         }
     };
     let mut state = "🌲🌲🏚🌲🌲";
     for action in actions {
         let choices = map.get(state).unwrap();
-        state = *choices.get(action.as_str()).unwrap();
+        if let Some(new_state) = choices.get(action.as_str()) {
+            state = new_state;
+        } else {
+            return "☠".into();
+        }
     }
-    return String::from(state);
+    return state.into();
 }
 // if action == "👀" || action == "🚪\n🚪" {
 //     return "🌲🌲🏚🌲🌲".to_string();
@@ -47,23 +52,28 @@ mod tests {
         assert_eq!(eval(&vec!["👀".into()]), "🌲🌲🏚🌲🌲");
     }
 
-    // #[test]
-    // fn move_closer_to_the_house() {
-    //     assert_eq!(eval("🚪".to_string()), "🛌🛋");
-    // }
-    // #[test]
-    // fn leave_house() {
-    //     assert_eq!(eval("🚪\n🚪".to_string()), "🌲🌲🏚🌲🌲");
-    // }
+    #[test]
+    fn move_closer_to_the_house() {
+        assert_eq!(eval(&vec!["🚪".into()]), "🛌🛋");
+    }
+    #[test]
+    fn leave_house() {
+        assert_eq!(eval(&vec!["🚪".into(), "🚪".into()]), "🌲🌲🏚🌲🌲");
+    }
 
-    // #[test]
-    // fn wake_up_the_guy() {
-    //     assert_eq!(eval("🚪\n👏".to_string()), "🛏⛄");
-    // }
-    // #[test]
-    // fn wake_up_the_guy_and_run() {
-    //     assert_eq!(eval("🚪\n👏".to_string()), "🛏⛄");
-    // }
+    #[test]
+    fn wake_up_the_guy() {
+        assert_eq!(eval(&vec!["🚪".into(), "👏".into()]), "🛏⛄");
+    }
+
+    #[test]
+    fn bad_action() {
+        assert_eq!(eval(&vec!["".into()]), "☠");
+    }
+    #[test]
+    fn wake_up_the_guy_and_run() {
+        assert_eq!(eval(&vec!["🚪".into(), "👏".into()]), "🛏⛄");
+    }
     // #[test]
     // fn indecisive_player() {
     //     let mut actions: Vec<&str> = vec![];
