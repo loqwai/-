@@ -1,18 +1,20 @@
-use std::io::{self, Read};
+use std::io::{self, Read, BufRead};
 mod lib;
 
 fn main() -> Result<(), io::Error> {
     println!("👋");
-    
-    loop {
-        let _command = next_command()?;
-        // let result = lib::eval(command.split("\n"));
-        // println!("{}", result);
+    let stdin = io::stdin();
+    let mut commands:Vec<String> = Vec::new();
+    for command in stdin.lock().lines() {
+        // let cmd = command?.as_str();       
+        commands.push(command?);
+        let result = lib::eval(&commands);
+        println!("{}", result);
     }
-}
-
-fn next_command() -> io::Result<String> {
-    let mut buffer = String::new();
-    let _result = io::stdin().read_to_string(&mut buffer);
-    return Ok(buffer);
+    Ok(())
+    // loop {
+    //     let _command = next_command()?;
+    //     let result = lib::eval(command.split("\n"));
+    //     // println!("{}", result);
+    // }
 }

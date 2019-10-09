@@ -6,33 +6,33 @@ use maplit::hashmap;
 //     actions: std::vec::Vec<&'a str>,
 // }
 
-pub fn eval(actions:Vec<&str>) -> &str {
-    let map = hashmap!{
+pub fn eval(actions: &Vec<String>) -> String {
+    let map = hashmap! {
         "🌲🌲🏚🌲🌲" => hashmap!{
-            "👀" => "🌲🌲🏚🌲🌲",
-            "🚪" =>  "🛌🛋", 
+            "👀" => String::from("🌲🌲🏚🌲🌲"),
+            "🚪" =>  String::from("🛌🛋"),
         },
-         "🛌🛋" => hashmap!{            
-            "🚪" =>  "🌲🌲🏚🌲🌲", 
+         "🛌🛋" => hashmap!{
+            "🚪" =>  String::from("🌲🌲🏚🌲🌲"),
         }
-    }; 
-    let mut state = "🌲🌲🏚🌲🌲";
+    };
+    let mut state = String::from("🌲🌲🏚🌲🌲");
     for action in actions {
-        state = map[state][action];
+        let choices = map.get(state.as_str()).unwrap();
+        state = choices.get(action.as_str()).unwrap().to_owned();
     }
     return state;
-
-    // if action == "👀" || action == "🚪\n🚪" {
-    //     return "🌲🌲🏚🌲🌲".to_string();
-    // }
-    // if action == "🚪" {
-    //     return "🛌🛋".to_string();
-    // }
-    // if action == "🚪\n👏" {
-    //     return "🛏⛄".to_string();
-    // }
-    // return "☠".to_string();
 }
+// if action == "👀" || action == "🚪\n🚪" {
+//     return "🌲🌲🏚🌲🌲".to_string();
+// }
+// if action == "🚪" {
+//     return "🛌🛋".to_string();
+// }
+// if action == "🚪\n👏" {
+//     return "🛏⛄".to_string();
+// }
+// return "☠".to_string();
 
 #[cfg(test)]
 mod tests {
