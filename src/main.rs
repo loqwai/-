@@ -5,9 +5,9 @@ fn main() -> Result<(), io::Error> {
     println!("👋");
     
     loop {
-        let command = next_command()?;
-        let result = lib::eval(command);
-        println!("{}", result);
+        let _command = next_command()?;
+        // let result = lib::eval(command.split("\n"));
+        // println!("{}", result);
     }
 }
 
