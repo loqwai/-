@@ -1,5 +1,5 @@
 use std::io::{self, Read, BufRead};
-mod lib;
+mod game;
 
 fn main() -> Result<(), io::Error> {
     println!("👋");
@@ -7,7 +7,7 @@ fn main() -> Result<(), io::Error> {
     let mut commands:Vec<String> = Vec::new();
     for command in stdin.lock().lines() {    
         commands.push(command?);
-        let result = lib::eval(&commands);
+        let result = game::eval(&commands);
         println!("{}", result);
     }
     Ok(())    
