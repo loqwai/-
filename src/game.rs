@@ -25,6 +25,9 @@ pub fn turn(actions: &Vec<String>) -> Result<String, NoneError> {
     let mut room = map.get("cabin_in_woods")?;
     for action in actions {
         if let Some(roomname) = room.actions.get(action.as_str()) {
+            if roomname.starts_with("➡") {
+                room.state = roomname;
+            }
             room = map.get(roomname)?;
         } else {
             return Ok(room.state.clone());
@@ -58,6 +61,7 @@ fn new<'a>() -> Map<'a> {
             state: "🛌🛋".into(),
             actions: hashmap!{
             "🚪" => "cabin_in_woods",
+            "👏" => "➡🛏⛄"
         }},
     };
     return map;
@@ -111,14 +115,15 @@ mod tests {
     //     }
     //     assert_eq!(turn(&actions), "🌲🌲🏚🌲🌲");
     // // }
-    // #[test]
-    // fn kill_rats() {        
-    //     let actions = &vec![
-    //         "🚪".into(),
-    //         "👏".into(),
-    //         "🚪".into(),
-    //         "🚪".into(),            
-    //     ];
-    //     assert_eq!(turn(actions), "🛏⛄");
-    // }
+    
+    #[test]
+    fn stay_woke() {        
+        let actions = &vec![
+            "🚪".into(),
+            "👏".into(),
+            "🚪".into(),
+            "🚪".into(),            
+        ];
+        assert_eq!(turn(actions).unwrap(), "🛏⛄");
+    }
 }
