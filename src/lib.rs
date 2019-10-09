@@ -44,7 +44,7 @@ mod tests {
     // }
     #[test]
     fn look_around_you() {
-        assert_eq!(eval(vec![&"👀"]), "🌲🌲🏚🌲🌲");
+        assert_eq!(eval(&vec!["👀".into()]), "🌲🌲🏚🌲🌲");
     }
 
     // #[test]
@@ -64,12 +64,12 @@ mod tests {
     // fn wake_up_the_guy_and_run() {
     //     assert_eq!(eval("🚪\n👏".to_string()), "🛏⛄");
     // }
-    #[test]
-    fn indecisive_player() {
-        let mut actions: Vec<&str> = vec![];
-        for _ in 0..100 {
-            actions.push(&"🚪");
-        }
-        assert_eq!(eval(actions), "🌲🌲🏚🌲🌲");
-    }
+    // #[test]
+    // fn indecisive_player() {
+    //     let mut actions: Vec<&str> = vec![];
+    //     for _ in 0..100 {
+    //         actions.push(&"🚪");
+    //     }
+    //     assert_eq!(eval(actions), "🌲🌲🏚🌲🌲");
+    // }
 }
