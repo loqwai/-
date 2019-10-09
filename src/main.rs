@@ -7,7 +7,7 @@ fn main() -> Result<(), io::Error> {
     let mut commands:Vec<String> = Vec::new();
     for command in stdin.lock().lines() {    
         commands.push(command?);
-        let result = game::eval(&commands);
+        let result = game::turn(&commands);
         println!("{}", result);
     }
     Ok(())    
