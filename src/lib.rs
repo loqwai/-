@@ -1,4 +1,4 @@
-pub fn eval(action: String) -> String {
+pub fn eval(_action: String) -> String {
     "☠".to_string()
 }
 
@@ -9,6 +9,6 @@ mod tests {
 
     #[test]
     fn kill_user() {
-        assert_eq!(eval("{}"), "☠");
+        assert_eq!(eval("{}".to_string()), "☠");
     }
 }
