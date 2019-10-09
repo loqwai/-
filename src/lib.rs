@@ -6,7 +6,7 @@ use maplit::hashmap;
 //     actions: std::vec::Vec<&'a str>,
 // }
 
-pub fn eval(actions:Vec<String>) -> String {
+pub fn eval(actions:Vec<&str>) -> &str {
     let map = hashmap!{
         "🌲🌲🏚🌲🌲" => hashmap!{
             "👀" => "🌲🌲🏚🌲🌲",
@@ -18,9 +18,9 @@ pub fn eval(actions:Vec<String>) -> String {
     }; 
     let mut state = "🌲🌲🏚🌲🌲";
     for action in actions {
-        state = map[state][action.as_str()];
+        state = map[state][action];
     }
-    return state.to_string();
+    return state;
 
     // if action == "👀" || action == "🚪\n🚪" {
     //     return "🌲🌲🏚🌲🌲".to_string();
@@ -44,7 +44,7 @@ mod tests {
     // }
     #[test]
     fn look_around_you() {
-        assert_eq!(eval(vec!["👀".to_string()]), "🌲🌲🏚🌲🌲");
+        assert_eq!(eval(vec![&"👀"]), "🌲🌲🏚🌲🌲");
     }
 
     // #[test]
@@ -56,19 +56,19 @@ mod tests {
     //     assert_eq!(eval("🚪\n🚪".to_string()), "🌲🌲🏚🌲🌲");
     // }
 
-    // // #[test]
-    // // fn wake_up_the_guy() {
-    // //     assert_eq!(eval("🚪\n👏".to_string()), "🛏⛄");
-    // // }
-    // // #[test]
-    // // fn wake_up_the_guy_and_run() {
-    // //     assert_eq!(eval("🚪\n👏".to_string()), "🛏⛄");
-    // // }
+    // #[test]
+    // fn wake_up_the_guy() {
+    //     assert_eq!(eval("🚪\n👏".to_string()), "🛏⛄");
+    // }
+    // #[test]
+    // fn wake_up_the_guy_and_run() {
+    //     assert_eq!(eval("🚪\n👏".to_string()), "🛏⛄");
+    // }
     #[test]
     fn indecisive_player() {
-        let mut actions: Vec<String> = vec![];
+        let mut actions: Vec<&str> = vec![];
         for _ in 0..100 {
-            actions.push("🚪".to_string());
+            actions.push(&"🚪");
         }
         assert_eq!(eval(actions), "🌲🌲🏚🌲🌲");
     }
