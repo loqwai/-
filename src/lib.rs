@@ -1,4 +1,14 @@
+struct Scene {
+    view: String,
+    actions: std::vec::Vec<String>
+}
+
 pub fn eval(action: String) -> String {
+    let s = Scene { 
+        view: "🌲🌲🏚🌲🌲".to_string(),
+        actions: vec!["🚪".to_string()],
+    };
+
     if action == "👀" || action == "🚪\n🚪" {
         return "🌲🌲🏚🌲🌲".to_string();
     }
@@ -36,6 +46,10 @@ mod tests {
 
     #[test]
     fn wake_up_the_guy() {                
+        assert_eq!(eval("🚪\n👏".to_string()), "🛏⛄");
+    }
+    #[test]
+    fn wake_up_the_guy_and_run() {                
         assert_eq!(eval("🚪\n👏".to_string()), "🛏⛄");
     }
 }
