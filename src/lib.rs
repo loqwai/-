@@ -1,12 +1,12 @@
-struct Scene {
+struct Scene<'a> {
     view: String,
-    actions: std::vec::Vec<String>
+    actions: std::vec::Vec<&'a str>
 }
 
 pub fn eval(action: String) -> String {
     let s = Scene { 
         view: "🌲🌲🏚🌲🌲".to_string(),
-        actions: vec!["🚪".to_string()],
+        actions: vec![&"🚪"],
     };
 
     if action == "👀" || action == "🚪\n🚪" {
