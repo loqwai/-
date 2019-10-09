@@ -9,17 +9,17 @@ use maplit::hashmap;
 pub fn eval(actions: &Vec<String>) -> String {
     let map = hashmap! {
         "🌲🌲🏚🌲🌲" => hashmap!{
-            "👀" => String::from("🌲🌲🏚🌲🌲"),
-            "🚪" =>  String::from("🛌🛋"),
+            "👀" => "🌲🌲🏚🌲🌲",
+            "🚪" =>  "🛌🛋",
         },
          "🛌🛋" => hashmap!{
-            "🚪" =>  String::from("🌲🌲🏚🌲🌲"),
+            "🚪" =>  "🌲🌲🏚🌲🌲",
         }
     };
     let mut state = String::from("🌲🌲🏚🌲🌲");
     for action in actions {
         let choices = map.get(state.as_str()).unwrap();
-        state = choices.get(action.as_str()).unwrap().to_owned();
+        state = String::from(*choices.get(action.as_str()).unwrap());
     }
     return state;
 }
