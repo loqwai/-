@@ -11,6 +11,9 @@ pub fn eval(actions:Vec<String>) -> String {
         "🌲🌲🏚🌲🌲" => hashmap!{
             "👀" => "🌲🌲🏚🌲🌲",
             "🚪" =>  "🛌🛋", 
+        },
+         "🛌🛋" => hashmap!{            
+            "🚪" =>  "🌲🌲🏚🌲🌲", 
         }
     }; 
     let mut state = "🌲🌲🏚🌲🌲";
@@ -61,14 +64,12 @@ mod tests {
     // // fn wake_up_the_guy_and_run() {
     // //     assert_eq!(eval("🚪\n👏".to_string()), "🛏⛄");
     // // }
-    // // #[test]
-    // // fn indecisive_player() {
-    // //     let mut actions: Vec<String> = vec![];
-    // //     for _ in 0..100 {
-    // //         actions.push("🚪".to_string());
-    // //     }
-
-    // //     let all_actions = actions.join("\n");
-    // //     assert_eq!(eval(all_actions), "🌲🌲🏚🌲🌲");
-    // // }
+    #[test]
+    fn indecisive_player() {
+        let mut actions: Vec<String> = vec![];
+        for _ in 0..100 {
+            actions.push("🚪".to_string());
+        }
+        assert_eq!(eval(actions), "🌲🌲🏚🌲🌲");
+    }
 }
