@@ -32,25 +32,11 @@ pub fn eval(actions: &Vec<String>) -> String {
     }
     return state.into();
 }
-// if action == "👀" || action == "🚪\n🚪" {
-//     return "🌲🌲🏚🌲🌲".to_string();
-// }
-// if action == "🚪" {
-//     return "🛌🛋".to_string();
-// }
-// if action == "🚪\n👏" {
-//     return "🛏⛄".to_string();
-// }
-// return "☠".to_string();
 
 #[cfg(test)]
 mod tests {
     use super::*;
-
-    // #[test]
-    // fn kill_user() {
-    //     assert_eq!(eval(vec!["💥".to_string()]), "☠");
-    // }
+    
     #[test]
     fn look_around_you() {
         assert_eq!(eval(&vec!["👀".into()]), "🌲🌲🏚🌲🌲");
