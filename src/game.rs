@@ -11,6 +11,7 @@ pub fn eval(actions: &Vec<String>) -> String {
         "🌲🌲🏚🌲🌲" => hashmap!{
             "👀" => "🌲🌲🏚🌲🌲",
             "🚪" =>  "🛌🛋",
+            "⬇" => "🌲🌲🌲🌲🌲"
         },
          "🛌🛋" => hashmap!{
             "🚪" =>  "🌲🌲🏚🌲🌲",
@@ -23,7 +24,7 @@ pub fn eval(actions: &Vec<String>) -> String {
         if let Some(new_state) = choices.get(action.as_str()) {
             state = new_state;
         } else {
-            return "☠".into();
+            return state.into()
         }
     }
     return state.into();
@@ -68,11 +69,15 @@ mod tests {
 
     #[test]
     fn bad_action() {
-        assert_eq!(eval(&vec!["".into()]), "☠");
+        assert_eq!(eval(&vec!["".into()]), "🌲🌲🏚🌲🌲");
     }
     #[test]
     fn wake_up_the_guy_and_run() {
         assert_eq!(eval(&vec!["🚪".into(), "👏".into()]), "🛏⛄");
+    }
+    #[test]
+    fn go_up() {
+        assert_eq!(eval(&vec!["⬇".into()]), "🌲🌲🌲🌲🌲");
     }
     // #[test]
     // fn indecisive_player() {
