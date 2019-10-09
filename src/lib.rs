@@ -16,12 +16,12 @@ pub fn eval(actions: &Vec<String>) -> String {
             "🚪" =>  "🌲🌲🏚🌲🌲",
         }
     };
-    let mut state = String::from("🌲🌲🏚🌲🌲");
+    let mut state = "🌲🌲🏚🌲🌲";
     for action in actions {
-        let choices = map.get(state.as_str()).unwrap();
-        state = String::from(*choices.get(action.as_str()).unwrap());
+        let choices = map.get(state).unwrap();
+        state = *choices.get(action.as_str()).unwrap();
     }
-    return state;
+    return String::from(state);
 }
 // if action == "👀" || action == "🚪\n🚪" {
 //     return "🌲🌲🏚🌲🌲".to_string();
