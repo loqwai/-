@@ -16,4 +16,3 @@ fn next_command() -> io::Result<String> {
     let _result = io::stdin().read_to_string(&mut buffer);
     return Ok(buffer);
 }
-
