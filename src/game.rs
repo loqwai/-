@@ -36,7 +36,7 @@ pub fn eval(actions: &Vec<String>) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
-    
+
     #[test]
     fn look_around_you() {
         assert_eq!(eval(&vec!["👀".into()]), "🌲🌲🏚🌲🌲");
@@ -72,12 +72,12 @@ mod tests {
     fn go_down_up() {
         assert_eq!(eval(&vec!["⬇".into(), "⬆".into()]), "🌲🌲🏚🌲🌲");
     }
-    // #[test]
-    // fn indecisive_player() {
-    //     let mut actions: Vec<&str> = vec![];
-    //     for _ in 0..100 {
-    //         actions.push(&"🚪");
-    //     }
-    //     assert_eq!(eval(actions), "🌲🌲🏚🌲🌲");
-    // }
+    #[test]
+    fn indecisive_player() {
+        let mut actions: Vec<String> = vec![];
+        for _ in 0..100 {
+            actions.push("🚪".into());
+        }
+        assert_eq!(eval(&actions), "🌲🌲🏚🌲🌲");
+    }
 }
