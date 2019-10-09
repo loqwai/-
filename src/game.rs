@@ -16,6 +16,9 @@ pub fn eval(actions: &Vec<String>) -> String {
          "🛌🛋" => hashmap!{
             "🚪" =>  "🌲🌲🏚🌲🌲",
             "👏" =>  "🛏⛄",
+        },
+        "🌲🌲🌲🌲🌲" => hashmap!{
+            "⬆" => "🌲🌲🏚🌲🌲",
         }
     };
     let mut state = "🌲🌲🏚🌲🌲";
@@ -78,6 +81,10 @@ mod tests {
     #[test]
     fn go_up() {
         assert_eq!(eval(&vec!["⬇".into()]), "🌲🌲🌲🌲🌲");
+    }
+    #[test]
+    fn go_down_up() {
+        assert_eq!(eval(&vec!["⬇".into(), "⬆".into()]), "🌲🌲🏚🌲🌲");
     }
     // #[test]
     // fn indecisive_player() {
