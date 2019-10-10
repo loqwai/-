@@ -31,14 +31,13 @@ pub fn turn(actions: &Vec<String>) -> Result<String, NoneError> {
         if let Some(mutation) = room.actions.get(action.as_str()) {
             if mutation.starts_with("➡") {
                 let r = Room{
-                    state: room.state.clone(),
+                    state: "🛏⛄".into(),
                     actions: room.actions.clone(),
                 };
                 map.insert("inside_cabin", r);
                 continue;
-            } else {
-                room = map.get(mutation)?.clone();
             }
+            room = map.get(mutation)?.clone();
         } else {
             return Ok(room.state.clone());
         }
