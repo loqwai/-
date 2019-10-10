@@ -2,22 +2,11 @@ use maplit::hashmap;
 use std::collections::HashMap;
 use std::option::NoneError;
 
-// type Map<'a> = HashMap<&'a str, HashMap<&'a str, &'a str>>;
 #[derive(Clone)]
 struct Room<'a> {
     state: String,
     actions: HashMap<&'a str, &'a str>,
 }
-
-// #[derive(Debug)]
-// struct TurnError{}
-
-
-// impl std::convert::From<NoneError> for TurnError {
-//     fn from(err: NoneError) -> Self {
-//         return TurnError{};
-//     }
-// }
 
 
 pub fn turn(actions: &Vec<String>) -> Result<String, NoneError> {
