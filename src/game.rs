@@ -22,7 +22,7 @@ struct Room<'a> {
 
 pub fn turn(actions: &Vec<String>) -> Result<String, NoneError> {
     let mut map = new();
-    let room: Room;
+    let mut room: Room;
     match map.get("cabin_in_woods") {
         Some(r) => room = r.clone(),
         None => panic!("aaaaaaaahhhhhhhh")
@@ -36,8 +36,9 @@ pub fn turn(actions: &Vec<String>) -> Result<String, NoneError> {
                 };
                 map.insert("inside_cabin", r);
                 continue;
+            } else {
+                room = map.get(mutation)?.clone();
             }
-            // room = map.get(mutation)?;
         } else {
             return Ok(room.state.clone());
         }
