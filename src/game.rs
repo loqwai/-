@@ -3,7 +3,7 @@ use std::collections::HashMap;
 use std::option::NoneError;
 
 // type Map<'a> = HashMap<&'a str, HashMap<&'a str, &'a str>>;
-
+#[derive(Clone)]
 struct Room<'a> {
     state: String,
     actions: HashMap<&'a str, &'a str>,
@@ -21,14 +21,23 @@ struct Room<'a> {
 
 
 pub fn turn(actions: &Vec<String>) -> Result<String, NoneError> {
-    let map = new();
-    let mut room = map.get("cabin_in_woods")?;
+    let mut map = new();
+    let room: Room;
+    match map.get("cabin_in_woods") {
+        Some(r) => room = r.clone(),
+        None => panic!("aaaaaaaahhhhhhhh")
+    }
     for action in actions {
-        if let Some(roomname) = room.actions.get(action.as_str()) {
-            if roomname.starts_with("➡") {
-                room.state = roomname;
+        if let Some(mutation) = room.actions.get(action.as_str()) {
+            if mutation.starts_with("➡") {
+                let r = Room{
+                    state: room.state.clone(),
+                    actions: room.actions.clone(),
+                };
+                map.insert("inside_cabin", r);
+                continue;
             }
-            room = map.get(roomname)?;
+            // room = map.get(mutation)?;
         } else {
             return Ok(room.state.clone());
         }
@@ -50,7 +59,7 @@ type Map<'a> = HashMap<&'a str, Room<'a>>;
 //     "⬆" => "🌲🌲🏚🌲🌲",
 // }
 fn new<'a>() -> Map<'a> {
-    let map = hashmap! {
+    return hashmap! {
         "cabin_in_woods" => Room{
             state: "🌲🌲🏚🌲🌲".into(),
             actions: hashmap!{
@@ -64,7 +73,6 @@ fn new<'a>() -> Map<'a> {
             "👏" => "➡🛏⛄"
         }},
     };
-    return map;
 }
 
 
