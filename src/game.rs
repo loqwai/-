@@ -120,15 +120,15 @@ mod tests {
         assert_eq!(turn(actions).unwrap(), "🛏⛄");
     }
 
-    // #[test]
-    // fn wake_up_put_back_asleep() {        
-    //     let actions = &vec![
-    //         "🚪".into(),
-    //         "👏".into(),
-    //         "🚪".into(),
-    //         "🔨".into(),
-    //         "🚪".into(),            
-    //     ];
-    //     assert_eq!(turn(actions).unwrap(), "🛌🛋");
-    // }
-}
+    #[test]
+    fn wake_up_put_back_asleep() {        
+        let actions = &vec![ 
+            "🚪".into(),
+            "👏".into(),
+            "🚪".into(),
+            "🔨".into(),
+            "🚪".into(),            
+        ];
+        assert_eq!(turn(actions).unwrap(), "🛌🛋");
+    }
+} 
