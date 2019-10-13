@@ -2,65 +2,67 @@ use maplit::hashmap;
 use std::collections::HashMap;
 use std::option::NoneError;
 
-#[derive(Clone)]
-struct Room<'a> {
+use serde::{Serialize, Deserialize};
+#[derive(Clone, Serialize, Deserialize, Debug)]
+struct Room {
     state: String,
-    actions: HashMap<&'a str, &'a str>,
+    actions: HashMap<String, String>,
 }
 
 pub fn turn(actions: &Vec<String>) -> Result<String, NoneError> {
     let mut map = new();
-    let mut room: Room;
-    match map.get("cabin_in_woods") {
-        Some(r) => room = r.clone(),
-        None => panic!("aaaaaaaahhhhhhhh"),
-    }
+    // let mut room: Room;
+    let mut room =  &map["cabin_in_woods"];
+    let mut current_state = room.state.clone();
     for action in actions {
-        match room.clone().actions.get(action.as_str()) {
+        match room.actions.get(action) {
             Some(mutation) => {
-                room = next_room(room, mutation);
+                // room = next_room(room, mutation);
                 if mutation.starts_with("➡") {
-                    let r = Room {
-                        state: "🛏⛄".into(),
-                        actions: room.actions.clone(),
-                    };
-                    map.insert("inside_cabin", r.clone());
-                    room = r.clone();
+                    // let r = Room {
+                    //     state: "🛏⛄".into(),
+                    //     actions: room.actions.clone(),
+                    // };
+                    // map.insert(String::from("inside_cabin"), r.clone());
+                    // room = r.clone();
                     continue;
-                }
-                room = map.get(mutation).unwrap().clone()
+                }                
+                room = &map[mutation];
+                current_state = room.state.clone();
+
             }
             None => return Ok("⁉".into()),
         }
     }
-    return Ok(room.state.clone());
+    return Ok(current_state);
 }
 
-fn next_room<'a>(room: Room<'a>, mutation: &str) -> Room<'a> {
-    room.clone()
+fn next_room(room: Room, mutation: &str) -> Room {
+    room
 }
 
-type Map<'a> = HashMap<&'a str, Room<'a>>;
+type Map<'a> = HashMap<String, Room>;
+
 fn new<'a>() -> Map<'a> {
     return hashmap! {
-        "cabin_in_woods" => Room{
+        String::from("cabin_in_woods") => Room{
             state: "🌲🌲🏚🌲🌲".into(),
             actions: hashmap!{
-            "👀" => "cabin_in_woods",
-            "🚪" => "inside_cabin",
-            "⬇" => "woods",
+            String::from("👀") => String::from("cabin_in_woods"),
+            String::from("🚪") => String::from("inside_cabin"),
+            String::from("⬇") => String::from("woods"),
         }},
-        "woods" => Room{
+        String::from("woods") => Room{
             state: "🌲🌲🌲🌲🌲".into(),
             actions: hashmap!{
-                "⬆" => "cabin_in_woods",
+                String::from("⬆") => String::from("cabin_in_woods"),
             },
         },
-        "inside_cabin" => Room{
+        String::from("inside_cabin") => Room{
             state: "🛌🛋".into(),
             actions: hashmap!{
-            "🚪" => "cabin_in_woods",
-            "👏" => "➡🛏⛄",
+            String::from("🚪") => String::from("cabin_in_woods"),
+            String::from("👏") => String::from("➡🛏⛄"),
         }},
     };
 }
