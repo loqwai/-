@@ -11,34 +11,32 @@ struct Room {
 
 pub fn turn(actions: &Vec<String>) -> Result<String, NoneError> {
     let mut map = new();
-    // let mut room: Room;
-    let mut room =  &map["cabin_in_woods"];
-    let mut current_state = room.state.clone();
+    // let mut room: Room;    
+    let mut room_name = String::from("cabin_in_woods");
     for action in actions {
+        println!("State: {}, Action: {}", room_name, action);
+        let room =  &map[&room_name];
+        println!("Actions: {:?}", room.actions);
         match room.actions.get(action) {
             Some(mutation) => {
+                println!("Mutation: {}", mutation);
                 // room = next_room(room, mutation);
                 if mutation.starts_with("➡") {
-                    // let r = Room {
-                    //     state: "🛏⛄".into(),
-                    //     actions: room.actions.clone(),
-                    // };
-                    // map.insert(String::from("inside_cabin"), r.clone());
-                    // room = r.clone();
+                    let r = Room {
+                        state: "🛏⛄".into(),
+                        actions: room.actions.clone(),
+                    };
+                    map.insert(String::from("inside_cabin"), r.clone());
                     continue;
-                }                
-                room = &map[mutation];
-                current_state = room.state.clone();
+                }
+                println!("{}, {}", room_name, mutation);                          
+                room_name = mutation.into();
 
             }
             None => return Ok("⁉".into()),
         }
     }
-    return Ok(current_state);
-}
-
-fn next_room(room: Room, mutation: &str) -> Room {
-    room
+    return Ok(map[&room_name].state.clone());
 }
 
 type Map<'a> = HashMap<String, Room>;
