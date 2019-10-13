@@ -95,7 +95,7 @@ mod tests {
 
     #[test]
     fn bad_action() {
-        assert_eq!(turn(&vec!["".into()]).unwrap(), "🌲🌲🏚🌲🌲");
+        assert_eq!(turn(&vec!["".into()]).unwrap(), "⁉");
     }
     #[test]
     fn wake_up_the_guy_and_run() {
