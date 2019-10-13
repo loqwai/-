@@ -2,8 +2,7 @@ use maplit::hashmap;
 use std::collections::HashMap;
 use std::option::NoneError;
 
-use serde::{Serialize, Deserialize};
-#[derive(Clone, Serialize, Deserialize, Debug)]
+#[derive(Clone)]
 struct Room {
     state: String,
     actions: HashMap<String, String>,
@@ -13,25 +12,20 @@ pub fn turn(actions: &Vec<String>) -> Result<String, NoneError> {
     let mut map = new();
     // let mut room: Room;    
     let mut room_name = String::from("cabin_in_woods");
-    for action in actions {
-        println!("State: {}, Action: {}", room_name, action);
-        let room =  &map[&room_name];
-        println!("Actions: {:?}", room.actions);
+    for action in actions {       
+        let room =  &map[&room_name];        
         match room.actions.get(action) {
-            Some(mutation) => {
-                println!("Mutation: {}", mutation);
+            Some(mutation) => {                
                 // room = next_room(room, mutation);
                 if mutation.starts_with("➡") {
                     let r = Room {
                         state: "🛏⛄".into(),
                         actions: room.actions.clone(),
                     };
-                    map.insert(String::from("inside_cabin"), r.clone());
+                    map.insert("inside_cabin".into(), r);
                     continue;
-                }
-                println!("{}, {}", room_name, mutation);                          
+                }                
                 room_name = mutation.into();
-
             }
             None => return Ok("⁉".into()),
         }
@@ -43,24 +37,24 @@ type Map<'a> = HashMap<String, Room>;
 
 fn new<'a>() -> Map<'a> {
     return hashmap! {
-        String::from("cabin_in_woods") => Room{
+        "cabin_in_woods".into() => Room{
             state: "🌲🌲🏚🌲🌲".into(),
             actions: hashmap!{
-            String::from("👀") => String::from("cabin_in_woods"),
-            String::from("🚪") => String::from("inside_cabin"),
-            String::from("⬇") => String::from("woods"),
+            "👀".into() => "cabin_in_woods".into(),
+            "🚪".into() => "inside_cabin".into(),
+            "⬇".into() => "woods".into(),
         }},
-        String::from("woods") => Room{
+        "woods".into() => Room{
             state: "🌲🌲🌲🌲🌲".into(),
             actions: hashmap!{
-                String::from("⬆") => String::from("cabin_in_woods"),
+                "⬆".into() => "cabin_in_woods".into(),
             },
         },
-        String::from("inside_cabin") => Room{
+        "inside_cabin".into() => Room{
             state: "🛌🛋".into(),
             actions: hashmap!{
-            String::from("🚪") => String::from("cabin_in_woods"),
-            String::from("👏") => String::from("➡🛏⛄"),
+            "🚪".into() => "cabin_in_woods".into(),
+            "👏".into() => "➡🛏⛄".into(),
         }},
     };
 }
@@ -129,15 +123,15 @@ mod tests {
         assert_eq!(turn(actions).unwrap(), "🛏⛄");
     }
 
-    // #[test]
-    // fn wake_up_put_back_asleep() {
-    //     let actions = &vec![
-    //         "🚪".into(),
-    //         "👏".into(),
-    //         "🚪".into(),
-    //         "🔨".into(),
-    //         "🚪".into(),
-    //     ];
-    //     assert_eq!(turn(actions).unwrap(), "🛌🛋");
-    // }
+    #[test]
+    fn wake_up_put_back_asleep() {
+        let actions = &vec![
+            "🚪".into(),
+            "👏".into(),
+            "🚪".into(),
+            "🔨".into(),
+            "🚪".into(),
+        ];
+        assert_eq!(turn(actions).unwrap(), "🛌🛋");
+    }
 }
