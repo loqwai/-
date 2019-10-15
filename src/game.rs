@@ -1,6 +1,5 @@
 use maplit::hashmap;
 use std::collections::HashMap;
-use std::option::NoneError;
 
 #[derive(Clone)]
 struct Room {
@@ -8,7 +7,7 @@ struct Room {
     actions: HashMap<String, String>,
 }
 
-pub fn turn(actions: &Vec<String>) -> Result<String, NoneError> {
+pub fn turn(actions: &Vec<String>) -> String {
     let mut map = new();
     // let mut room: Room;    
     let mut room_name = String::from("cabin_in_woods");
@@ -27,10 +26,10 @@ pub fn turn(actions: &Vec<String>) -> Result<String, NoneError> {
                 }                
                 room_name = mutation.into();
             }
-            None => return Ok("⁉".into()),
+            None => return "⁉".into(),
         }
     }
-    return Ok(map[&room_name].state.clone());
+    return map[&room_name].state.clone();
 }
 
 type Map<'a> = HashMap<String, Room>;
@@ -65,43 +64,43 @@ mod tests {
 
     #[test]
     fn look_around_you() {
-        assert_eq!(turn(&vec!["👀".into()]).unwrap(), "🌲🌲🏚🌲🌲");
+        assert_eq!(turn(&vec!["👀".into()]), "🌲🌲🏚🌲🌲");
     }
 
     #[test]
     fn do_something_weird() {
-        assert_eq!(turn(&vec!["💃".into()]).unwrap(), "⁉");
+        assert_eq!(turn(&vec!["💃".into()]), "⁉");
     }
 
     #[test]
     fn move_closer_to_the_house() {
-        assert_eq!(turn(&vec!["🚪".into()]).unwrap(), "🛌🛋");
+        assert_eq!(turn(&vec!["🚪".into()]), "🛌🛋");
     }
     #[test]
     fn leave_house() {
-        assert_eq!(turn(&vec!["🚪".into(), "🚪".into()]).unwrap(), "🌲🌲🏚🌲🌲");
+        assert_eq!(turn(&vec!["🚪".into(), "🚪".into()]), "🌲🌲🏚🌲🌲");
     }
 
     #[test]
     fn wake_up_the_guy() {
-        assert_eq!(turn(&vec!["🚪".into(), "👏".into()]).unwrap(), "🛏⛄");
+        assert_eq!(turn(&vec!["🚪".into(), "👏".into()]), "🛏⛄");
     }
 
     #[test]
     fn bad_action() {
-        assert_eq!(turn(&vec!["".into()]).unwrap(), "⁉");
+        assert_eq!(turn(&vec!["".into()]), "⁉");
     }
     #[test]
     fn wake_up_the_guy_and_run() {
-        assert_eq!(turn(&vec!["🚪".into(), "👏".into()]).unwrap(), "🛏⛄");
+        assert_eq!(turn(&vec!["🚪".into(), "👏".into()]), "🛏⛄");
     }
     #[test]
     fn go_down() {
-        assert_eq!(turn(&vec!["⬇".into()]).unwrap(), "🌲🌲🌲🌲🌲");
+        assert_eq!(turn(&vec!["⬇".into()]), "🌲🌲🌲🌲🌲");
     }
     #[test]
     fn go_down_up() {
-        assert_eq!(turn(&vec!["⬇".into(), "⬆".into()]).unwrap(), "🌲🌲🏚🌲🌲");
+        assert_eq!(turn(&vec!["⬇".into(), "⬆".into()]), "🌲🌲🏚🌲🌲");
     }
     #[test]
     fn indecisive_player() {
@@ -109,7 +108,7 @@ mod tests {
         for _ in 0..100 {
             actions.push("🚪".into());
         }
-        assert_eq!(turn(&actions).unwrap(), "🌲🌲🏚🌲🌲");
+        assert_eq!(turn(&actions), "🌲🌲🏚🌲🌲");
     }
     #[rustfmt::skip]
     #[test]
@@ -120,7 +119,7 @@ mod tests {
             "🚪".into(),
             "🚪".into(),            
         ];
-        assert_eq!(turn(actions).unwrap(), "🛏⛄");
+        assert_eq!(turn(actions), "🛏⛄");
     }
 
     #[test]
@@ -132,6 +131,6 @@ mod tests {
             "🔨".into(),
             "🚪".into(),
         ];
-        assert_eq!(turn(actions).unwrap(), "🛌🛋");
+        assert_eq!(turn(actions), "🛌🛋");
     }
 }

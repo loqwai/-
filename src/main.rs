@@ -1,4 +1,3 @@
-#![feature(try_trait)]
 use std::io::{self, BufRead};
 mod game;
 
@@ -9,10 +8,7 @@ fn main() -> Result<(), io::Error> {
     for command in stdin.lock().lines() {    
         commands.push(command?);
         let result = game::turn(&commands);
-        match result {
-            Ok(state) => println!("{}", state),
-            Err(_) => println!("{}", "you fucked up"),
-        }
+        println!("{}", result);
     }
     Ok(())    
 }
