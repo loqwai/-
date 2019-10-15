@@ -9,12 +9,18 @@ workflows:
 jobs:
   test:
     docker:
-      - image: circleci/rust:latest
+      - image: royvandewater/rust-ci:latest
 
     steps:
       - checkout
 
+      - run: mkdir ~/results
+
       - run:
           name: test
-          command: cargo test
+          command: cargo test -- -Z unstable-options --format json | cargo2junit > ~/results/junit.xml
+
+      - store_test_results:
+          paht: ~/results
+
   
