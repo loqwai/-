@@ -56,16 +56,61 @@ impl Mutator for RoomStateChanger {
         
         Map {
             current_room: map.current_room.clone(),
-            rooms: rooms
+            rooms: rooms,
         }
     }
 }
 
-fn change_room(room_name: String, new_state: String) -> Box<dyn Mutator> {
+fn change_room_state(room_name: String, new_state: String) -> Box<dyn Mutator> {
     Box::new(RoomStateChanger{
         room_name: room_name,
         new_state: new_state,
     })
+}
+
+#[derive(Clone)]
+struct RoomActionsChanger {
+    room_name: String,
+    actions: HashMap<String, Box<dyn Mutator>>,
+}
+
+impl Mutator for RoomActionsChanger {
+    fn mutate(&self, map: Map) -> Map {
+        let mut rooms = map.rooms.clone();
+        let mut room = rooms[&self.room_name].clone();
+        room.actions = self.actions.clone();
+        rooms.insert(self.room_name.clone(), room);
+        
+        Map {
+            current_room: map.current_room.clone(),
+            rooms: rooms,
+        }
+    }
+}
+
+fn change_room_actions(room_name: String, actions: HashMap<String, Box<dyn Mutator>>) -> Box<dyn Mutator> {
+    Box::new(RoomActionsChanger{room_name: room_name, actions: actions})
+}
+
+#[derive(Clone)]
+struct CompositeMutator {
+    mutators: Vec<Box<dyn Mutator>>,
+}
+
+impl Mutator for CompositeMutator {
+    fn mutate(&self, map: Map) -> Map {
+        let mut current_map = map;
+
+        for mutator in self.mutators.clone() {
+            current_map = mutator.mutate(current_map);
+        }
+
+        current_map
+    }
+}
+
+fn compose_mutators(mutators: Vec<Box<dyn Mutator>>) -> Box<dyn Mutator> {
+    Box::new(CompositeMutator{mutators: mutators})
 }
 
 #[derive(Clone)]
@@ -100,8 +145,13 @@ fn new() -> Map {
                 state: "🛌🛋".into(),
                 actions: hashmap!{
                     "🚪".into() => go_somewhere("cabin_in_woods".into()),
-                    "👏".into() => change_room("inside_cabin".into(), "🛏⛄".into()),
-                    "🔨".into() => change_room("inside_cabin".into(), "🛌🛋".into()),
+                    "👏".into() => compose_mutators(vec![
+                        change_room_state("inside_cabin".into(), "🛏⛄".into()),
+                        change_room_actions("inside_cabin".into(), hashmap!{
+                            "🚪".into() => go_somewhere("cabin_in_woods".into()),
+                            "🔨".into() => change_room_state("inside_cabin".into(), "🛌🛋".into()),
+                        })
+                    ]),
                 },
             },
         },
