@@ -1,46 +1,60 @@
 use maplit::hashmap;
 use std::collections::HashMap;
 
-type Action = |map: Map| -> Map; 
+trait Mutator: MutatorClone {
+    fn mutate(&self, map: Map) -> Map;
+}
+
+trait MutatorClone {
+    fn clone_box(&self) -> Box<dyn Mutator>;
+}
+
+impl<T> MutatorClone for T where T: 'static + Mutator + Clone {
+    fn clone_box(&self) -> Box<dyn Mutator> {
+        return Box::new(self.clone());
+    }
+}
+
+impl Clone for Box<dyn Mutator> {
+    fn clone(&self) -> Box<dyn Mutator> {
+        self.clone_box()
+    }
+}
 
 #[derive(Clone)]
-struct Room {
-    state: String,
-    actions: HashMap<String, Action>,
+struct SomewhereGoer {
+    room_name: String,
 }
 
-pub fn turn(actions: &Vec<String>) -> String {
-    let mut map = new();
-    // let mut room: Room;    
-    let mut room_name = String::from("cabin_in_woods");
-    for action in actions {       
-        let room =  &map[&room_name];        
-        match room.actions.get(action) {
-            Some(mutation) => {                
-                map = mutation(map);
-            }
-            None => return format!("{}⁉", action),
-        }
-    }
-    return map.rooms[&room_name].state.clone();
-}
-
-fn go_somewhere(room_name: String) -> Action {
-    return |map: Map| -> Map {
+impl Mutator for SomewhereGoer {
+    fn mutate(&self, map: Map) -> Map {
         Map{
-            current_room: room_name.clone(),
+            current_room: self.room_name.clone(),
             rooms: map.rooms.clone(),
         }
     }
 }
 
+fn go_somewhere(room_name: String) -> Box<dyn Mutator> {
+    Box::new(SomewhereGoer {
+        room_name: room_name,
+    })
+}
+
+#[derive(Clone)]
+struct Room {
+    state: String,
+    actions: HashMap<String, Box<dyn Mutator>>,
+}
+
 struct Map {
+    current_room: String,
     rooms: HashMap<String, Room>
 }
 
 fn new() -> Map {
     return Map{
-        current_room: "woods",
+        current_room: "woods".into(),
         rooms: hashmap! {
         "cabin_in_woods".into() => Room{
             state: "🌲🌲🏚🌲🌲".into(),
@@ -65,6 +79,31 @@ fn new() -> Map {
     }
     };
 }
+
+pub fn turn(actions: &Vec<String>) -> String {
+    let mut map = new();
+    let room_name = map.current_room.clone();
+    for action in actions {       
+        let room =  &map.rooms[&room_name].clone();        
+        match room.actions.get(action) {
+            Some(mutation) => {                
+                map = mutation.mutate(map);
+            }
+            None => return format!("{}⁉", action),
+        }
+    }
+    return map.rooms[&room_name].state.clone();
+}
+
+// fn go_somewhere(room_name: String) -> Action {
+//     return Box::new(|map: Map| -> Map {
+//         Map{
+//             current_room: room_name.clone(),
+//             rooms: map.rooms.clone(),
+//         }
+//     })
+// }
+
 
 #[cfg(test)]
 mod tests {
