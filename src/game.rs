@@ -54,7 +54,7 @@ struct Map {
 
 fn new() -> Map {
     return Map{
-        current_room: "woods".into(),
+        current_room: "cabin_in_woods".into(),
         rooms: hashmap! {
         "cabin_in_woods".into() => Room{
             state: "🌲🌲🏚🌲🌲".into(),
@@ -94,16 +94,6 @@ pub fn turn(actions: &Vec<String>) -> String {
     }
     return map.rooms[&room_name].state.clone();
 }
-
-// fn go_somewhere(room_name: String) -> Action {
-//     return Box::new(|map: Map| -> Map {
-//         Map{
-//             current_room: room_name.clone(),
-//             rooms: map.rooms.clone(),
-//         }
-//     })
-// }
-
 
 #[cfg(test)]
 mod tests {
