@@ -28,7 +28,7 @@ struct SomewhereGoer {
 
 impl Mutator for SomewhereGoer {
     fn mutate(&self, map: Map) -> Map {
-        Map{
+        Map {
             current_room: self.room_name.clone(),
             rooms: map.rooms.clone(),
         }
@@ -38,6 +38,33 @@ impl Mutator for SomewhereGoer {
 fn go_somewhere(room_name: String) -> Box<dyn Mutator> {
     Box::new(SomewhereGoer {
         room_name: room_name,
+    })
+}
+
+#[derive(Clone)]
+struct RoomStateChanger {
+    room_name: String,
+    new_state: String,
+}
+
+impl Mutator for RoomStateChanger {
+    fn mutate(&self, map: Map) -> Map {
+        let mut rooms = map.rooms.clone();
+        let mut room = rooms[&self.room_name].clone();
+        room.state = self.new_state.clone();
+        rooms.insert(self.room_name.clone(), room);
+        
+        Map {
+            current_room: map.current_room.clone(),
+            rooms: rooms
+        }
+    }
+}
+
+fn change_room(room_name: String, new_state: String) -> Box<dyn Mutator> {
+    Box::new(RoomStateChanger{
+        room_name: room_name,
+        new_state: new_state,
     })
 }
 
@@ -53,37 +80,38 @@ struct Map {
 }
 
 fn new() -> Map {
-    return Map{
+    Map {
         current_room: "cabin_in_woods".into(),
         rooms: hashmap! {
-        "cabin_in_woods".into() => Room{
-            state: "🌲🌲🏚🌲🌲".into(),
-            actions: hashmap!{
-            "👀".into() => go_somewhere("cabin_in_woods".into()),
-            "🚪".into() => go_somewhere("inside_cabin".into()),
-            "⬇".into() => go_somewhere("woods".into()),
-        }},
-        "woods".into() => Room{
-            state: "🌲🌲🌲🌲🌲".into(),
-            actions: hashmap!{
-                "⬆".into() => go_somewhere("cabin_in_woods".into()),
+            "cabin_in_woods".into() => Room{
+                state: "🌲🌲🏚🌲🌲".into(),
+                actions: hashmap!{
+                    "👀".into() => go_somewhere("cabin_in_woods".into()),
+                    "🚪".into() => go_somewhere("inside_cabin".into()),
+                    "⬇".into() => go_somewhere("woods".into()),
+                }},
+            "woods".into() => Room{
+                state: "🌲🌲🌲🌲🌲".into(),
+                actions: hashmap!{
+                    "⬆".into() => go_somewhere("cabin_in_woods".into()),
+                },
+            },
+            "inside_cabin".into() => Room{
+                state: "🛌🛋".into(),
+                actions: hashmap!{
+                    "🚪".into() => go_somewhere("cabin_in_woods".into()),
+                    "👏".into() => change_room("inside_cabin".into(), "🛏⛄".into()),
+                    "🔨".into() => change_room("inside_cabin".into(), "🛌🛋".into()),
+                },
             },
         },
-        "inside_cabin".into() => Room{
-            state: "🛌🛋".into(),
-            actions: hashmap!{
-            "🚪".into() => go_somewhere("cabin_in_woods".into()),
-            "👏".into() => go_somewhere("➡🛏⛄".into()),
-            "🔨".into() => go_somewhere("➡🛌🛋".into()),
-        }},
     }
-    };
 }
 
 pub fn turn(actions: &Vec<String>) -> String {
     let mut map = new();
-    let room_name = map.current_room.clone();
     for action in actions {       
+        let room_name = map.current_room.clone();
         let room =  &map.rooms[&room_name].clone();        
         match room.actions.get(action) {
             Some(mutation) => {                
@@ -92,7 +120,8 @@ pub fn turn(actions: &Vec<String>) -> String {
             None => return format!("{}⁉", action),
         }
     }
-    return map.rooms[&room_name].state.clone();
+
+    map.rooms[&map.current_room].state.clone()
 }
 
 #[cfg(test)]
