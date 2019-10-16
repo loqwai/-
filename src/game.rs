@@ -18,7 +18,7 @@ pub fn turn(actions: &Vec<String>) -> String {
                 // room = next_room(room, mutation);
                 if mutation.starts_with("➡") {
                     let r = Room {
-                        state: "🛏⛄".into(),
+                        state: mutation.as_str()[3..].into(),
                         actions: room.actions.clone(),
                     };
                     map.insert("inside_cabin".into(), r);
@@ -26,7 +26,7 @@ pub fn turn(actions: &Vec<String>) -> String {
                 }                
                 room_name = mutation.into();
             }
-            None => return "⁉".into(),
+            None => return format!("Unknown Action: {}", action),
         }
     }
     return map[&room_name].state.clone();
@@ -54,6 +54,7 @@ fn new<'a>() -> Map<'a> {
             actions: hashmap!{
             "🚪".into() => "cabin_in_woods".into(),
             "👏".into() => "➡🛏⛄".into(),
+            "🔨".into() => "➡🛌🛋".into(),
         }},
     };
 }
@@ -69,7 +70,7 @@ mod tests {
 
     #[test]
     fn do_something_weird() {
-        assert_eq!(turn(&vec!["💃".into()]), "⁉");
+        assert_eq!(turn(&vec!["💃".into()]), "Unknown Action: 💃");
     }
 
     #[test]
@@ -86,10 +87,6 @@ mod tests {
         assert_eq!(turn(&vec!["🚪".into(), "👏".into()]), "🛏⛄");
     }
 
-    #[test]
-    fn bad_action() {
-        assert_eq!(turn(&vec!["".into()]), "⁉");
-    }
     #[test]
     fn wake_up_the_guy_and_run() {
         assert_eq!(turn(&vec!["🚪".into(), "👏".into()]), "🛏⛄");
@@ -128,8 +125,8 @@ mod tests {
             "🚪".into(),
             "👏".into(),
             "🚪".into(),
-            "🔨".into(),
             "🚪".into(),
+            "🔨".into(),
         ];
         assert_eq!(turn(actions), "🛌🛋");
     }
