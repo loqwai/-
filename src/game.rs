@@ -130,4 +130,12 @@ mod tests {
         ];
         assert_eq!(turn(actions), "🛌🛋");
     }
+     #[test]
+    fn you_cant_hammer() {
+        let actions = &vec![
+            "🚪".into(),
+            "🔨".into(),            
+        ];
+        assert_eq!(turn(actions), "Unknown Action: 🔨");
+    }
 }
