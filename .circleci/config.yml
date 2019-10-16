@@ -21,6 +21,6 @@ jobs:
           command: cargo test -- -Z unstable-options --format json | cargo2junit > ~/results/junit.xml
 
       - store_test_results:
-          paht: ~/results
+          path: ~/results
 
   
