@@ -64,8 +64,9 @@ mod tests {
         }
         assert_eq!(turn(&actions), "🌲🌲🏚🌲🌲");
     }
-    #[rustfmt::skip]
+    
     #[test]
+    #[rustfmt::skip]
     fn stay_woke() {        
         let actions = &vec![
             "🚪".into(),
@@ -87,7 +88,8 @@ mod tests {
         ];
         assert_eq!(turn(actions), "🛌🛋");
     }
-     #[test]
+
+    #[test]
     fn you_cant_hammer() {
         let actions = &vec![
             "🚪".into(),

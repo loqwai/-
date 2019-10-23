@@ -34,9 +34,9 @@ impl Transition for SomewhereGoer {
     }
 }
 
-pub fn go_somewhere(room_name: String) -> Box<dyn Transition> {
+pub fn go_somewhere(room_name: &'static str) -> Box<dyn Transition> {
     Box::new(SomewhereGoer {
-        room_name: room_name,
+        room_name: room_name.into(),
     })
 }
 
@@ -60,10 +60,10 @@ impl Transition for RoomStateChanger {
     }
 }
 
-pub fn change_room_state(room_name: String, new_state: String) -> Box<dyn Transition> {
+pub fn change_room_state(room_name: &'static str, new_state: &'static str) -> Box<dyn Transition> {
     Box::new(RoomStateChanger{
-        room_name: room_name,
-        new_state: new_state,
+        room_name: room_name.into(),
+        new_state: new_state.into(),
     })
 }
 
@@ -87,8 +87,8 @@ impl Transition for RoomActionsChanger {
     }
 }
 
-pub fn change_room_actions(room_name: String, actions: HashMap<String, Box<dyn Transition>>) -> Box<dyn Transition> {
-    Box::new(RoomActionsChanger{room_name: room_name, actions: actions})
+pub fn change_room_actions(room_name: &'static str, actions: HashMap<String, Box<dyn Transition>>) -> Box<dyn Transition> {
+    Box::new(RoomActionsChanger{room_name: room_name.into(), actions: actions})
 }
 
 #[derive(Clone)]
