@@ -10,7 +10,7 @@ pub fn turn(actions: &Vec<&'static str>) -> &'static str {
                 map = mutation.transit(map);
             }
             None => {
-                Box::leak(format!("{}⁉", action).into_boxed_str());
+                return Box::leak(format!("{}⁉", action).into_boxed_str());
             }
         }
     }
@@ -97,16 +97,15 @@ mod tests {
             "🚪".into(),
             "🔨".into(),            
         ];
-        assert_eq!(turn(actions), "🔨⁉");
+        assert_eq!(turn(actions), "🔨⁉");    
+    }
+    #[test]
+    fn what_can_i_do() {
+        let actions = &vec![
+            "🚪".into(),
+            "⁉".into(),            
+        ];
+        assert_eq!(turn(actions), "👀 🚪 ⬇");
     
     }
-    // #[test]
-    // fn you_cant_hammer() {
-    //     let actions = &vec![
-    //         "⬅".into(),
-    //         "✋🗡".into(),
-    //         "👀".into(),            
-    //     ];
-    //     assert_eq!(turn(actions), "🌴🏜🏜");
-    // }
 }

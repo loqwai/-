@@ -16,7 +16,6 @@ pub fn new() -> transitions::Map {
                 state: "🌲🌲🌲🌲🌲",
                 actions: hashmap!{
                     "⬆" => transitions::go_somewhere("cabin_in_woods"),
-                    "⬅" => transitions::go_somewhere("desert_paradise"),
                 },
             },
             "inside_cabin" => transitions::Room{
