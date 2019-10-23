@@ -22,7 +22,7 @@ impl Clone for Box<dyn Transition> {
 
 #[derive(Clone)]
 struct SomewhereGoer {
-    room_name: String,
+    room_name: &'static str,
 }
 
 impl Transition for SomewhereGoer {
@@ -42,14 +42,14 @@ pub fn go_somewhere(room_name: &'static str) -> Box<dyn Transition> {
 
 #[derive(Clone)]
 struct RoomStateChanger {
-    room_name: String,
-    new_state: String,
+    room_name: &'static str,
+    new_state: &'static str,
 }
 
 impl Transition for RoomStateChanger {
     fn transit(&self, map: Map) -> Map {
         let mut rooms = map.rooms.clone();
-        let mut room = rooms[&self.room_name].clone();
+        let mut room = rooms[self.room_name].clone();
         room.state = self.new_state.clone();
         rooms.insert(self.room_name.clone(), room);
         
@@ -69,14 +69,14 @@ pub fn change_room_state(room_name: &'static str, new_state: &'static str) -> Bo
 
 #[derive(Clone)]
 struct RoomActionsChanger {
-    room_name: String,
-    actions: HashMap<String, Box<dyn Transition>>,
+    room_name: &'static str,
+    actions: HashMap<&'static str, Box<dyn Transition>>,
 }
 
 impl Transition for RoomActionsChanger {
     fn transit(&self, map: Map) -> Map {
         let mut rooms = map.rooms.clone();
-        let mut room = rooms[&self.room_name].clone();
+        let mut room = rooms[self.room_name].clone();
         room.actions = self.actions.clone();
         rooms.insert(self.room_name.clone(), room);
         
@@ -87,7 +87,7 @@ impl Transition for RoomActionsChanger {
     }
 }
 
-pub fn change_room_actions(room_name: &'static str, actions: HashMap<String, Box<dyn Transition>>) -> Box<dyn Transition> {
+pub fn change_room_actions(room_name: &'static str, actions: HashMap<&'static str, Box<dyn Transition>>) -> Box<dyn Transition> {
     Box::new(RoomActionsChanger{room_name: room_name.into(), actions: actions})
 }
 
@@ -114,11 +114,11 @@ pub fn compose_transitions(mutators: Vec<Box<dyn Transition>>) -> Box<dyn Transi
 
 #[derive(Clone)]
 pub struct Room {
-    pub state: String,
-    pub actions: HashMap<String, Box<dyn Transition>>,
+    pub state: &'static str,
+    pub actions: HashMap<&'static str, Box<dyn Transition>>,
 }
 
 pub struct Map {
-    pub current_room: String,
-    pub rooms: HashMap<String, Room>
+    pub current_room: &'static str,
+    pub rooms: HashMap<&'static str, Room>
 }

@@ -1,19 +1,21 @@
 mod map;
 
-pub fn turn(actions: &Vec<String>) -> String {
+pub fn turn(actions: &Vec<&'static str>) -> &'static str {
     let mut map = map::new();
     for action in actions {       
         let room_name = map.current_room.clone();
-        let room =  &map.rooms[&room_name].clone();        
+        let room = map.rooms[room_name].clone();        
         match room.actions.get(action) {
             Some(mutation) => {                
                 map = mutation.transit(map);
             }
-            None => return format!("{}⁉", action),
+            None => {
+                Box::leak(format!("{}⁉", action).into_boxed_str());
+            }
         }
     }
 
-    map.rooms[&map.current_room].state.clone()
+    map.rooms[map.current_room].state.clone()
 }
 
 #[cfg(test)]
@@ -58,9 +60,9 @@ mod tests {
     }
     #[test]
     fn indecisive_player() {
-        let mut actions: Vec<String> = vec![];
+        let mut actions: Vec<&'static str> = vec![];
         for _ in 0..100 {
-            actions.push("🚪".into());
+            actions.push("🚪");
         }
         assert_eq!(turn(&actions), "🌲🌲🏚🌲🌲");
     }
@@ -96,5 +98,15 @@ mod tests {
             "🔨".into(),            
         ];
         assert_eq!(turn(actions), "🔨⁉");
+    
     }
+    // #[test]
+    // fn you_cant_hammer() {
+    //     let actions = &vec![
+    //         "⬅".into(),
+    //         "✋🗡".into(),
+    //         "👀".into(),            
+    //     ];
+    //     assert_eq!(turn(actions), "🌴🏜🏜");
+    // }
 }
